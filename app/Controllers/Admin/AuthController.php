@@ -22,15 +22,17 @@ class AuthController extends BaseController
             return redirect()->back()->with('error', 'Username atau password salah');
         }
 
-        session()->set('admin_logged_in', true);
-        session()->set('admin_id', $admin['id']);
+        session()->set([
+            'admin_logged_in' => true,
+            'admin_id'        => $admin['id'],
+        ]);
 
-        return redirect()->to('/admin/dashboard');
+        return redirect()->to(base_url('admin/dashboard'));
     }
 
     public function logout()
     {
         session()->destroy();
-        return redirect()->to('/admin/login');
+        return redirect()->to(base_url('admin/login'));
     }
 }
