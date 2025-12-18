@@ -25,8 +25,8 @@ $routes->group('admin', ['filter' => 'adminauth'], function ($routes) {
 
     $routes->get('dashboard', 'Admin\DashboardController::index');
 
-    // nanti nambah di sini:
-    // $routes->get('products', 'Admin\ProductController::index');
-    // $routes->get('products/create', 'Admin\ProductController::create');
-    // $routes->post('products/store', 'Admin\ProductController::store');
+// products (admin side)
+    $routes->get('products', 'Admin\ProductController::index');
+    $routes->get('products/create', 'Admin\ProductController::create');
+    $routes->post('products/store', 'Admin\ProductController::store');
 });

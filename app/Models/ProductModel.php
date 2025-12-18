@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Models;
 
-use App\Models\ProductModel;
+use CodeIgniter\Model;
 
-class ProductController extends BaseController
+class ProductModel extends Model
 {
-    public function index()
-    {
-        $productModel = new ProductModel();
+    protected $table = 'products';
+    protected $primaryKey = 'id';
 
-        $data['products'] = $productModel->findAll();
-
-        return view('products/index', $data);
-    }
+    protected $allowedFields = [
+        'name',
+        'price',
+        'stock',
+        'description',
+        'image',  
+        'status'   
+    ];
 }

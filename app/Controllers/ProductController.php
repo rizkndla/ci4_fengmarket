@@ -20,26 +20,35 @@ class ProductController extends BaseController
         return view('admin/products/create');
     }
 
-    public function store()
-    {
-        $model = new ProductModel();
+public function store()
+{
+    $model = new ProductModel();
 
-        $image = $this->request->getFile('image');
-        $imageName = null;
+    $image = $this->request->getFile('image');
+    $imageName = null;
 
-        if ($image && $image->isValid()) {
-            $imageName = $image->getRandomName();
-            $image->move('uploads/products', $imageName);
+    if ($image && $image->isValid() && !$image->hasMoved()) {
+
+        $uploadPath = FCPATH . 'uploads/products';
+
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
         }
 
-        $model->insert([
-            'name' => $this->request->getPost('name'),
-            'price' => $this->request->getPost('price'),
-            'description' => $this->request->getPost('description'),
-            'image' => $imageName,
-            'status' => 1,
-        ]);
-
-        return redirect()->to('/admin/products');
+        $imageName = $image->getRandomName();
+        $image->move($uploadPath, $imageName);
     }
+
+    $model->insert([
+        'name'        => $this->request->getPost('name'),
+        'price'       => $this->request->getPost('price'),
+        'stock'       => $this->request->getPost('stock'),
+        'description' => $this->request->getPost('description'),
+        'image'       => $imageName,
+        'status'      => 1,
+    ]);
+
+    return redirect()->to('/admin/products');
+}
+
 }
