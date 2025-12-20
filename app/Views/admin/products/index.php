@@ -182,13 +182,13 @@
         height: 180px;
         position: relative;
         overflow: hidden;
-        background: #0a192f; /* Dark solid color */
+        background: #0a192f;
     }
     
     .product-image {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* 🔥 INI KUNCI! */
+        object-fit: cover;
         display: block;
         transition: transform 0.6s ease;
     }
@@ -262,6 +262,18 @@
         border: 1px solid rgba(0, 255, 204, 0.2);
     }
     
+    .stock.low {
+        background: rgba(239, 68, 68, 0.1);
+        color: #f87171;
+        border-color: rgba(239, 68, 68, 0.2);
+    }
+    
+    .stock.out {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+    
     /* ===== PRODUCT ACTIONS ===== */
     .product-actions {
         display: flex;
@@ -319,19 +331,12 @@
         transform: translateY(-2px);
     }
     
-    /* BADGE ID */
-    .product-id {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: rgba(0, 0, 0, 0.5);
-        color: var(--color-text-secondary);
-        font-size: 11px;
-        padding: 3px 8px;
-        border-radius: 10px;
-        backdrop-filter: blur(5px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        z-index: 10;
+    /* FORM DELETE STYLE */
+    .delete-form {
+        flex: 1;
+        margin: 0;
+        padding: 0;
+        display: block;
     }
     
     /* ===== EMPTY STATE ===== */
@@ -366,6 +371,74 @@
         line-height: 1.5;
     }
     
+    /* ===== CUSTOM SWEETALERT STYLE ===== */
+    .swal2-popup {
+        background: var(--color-navy-light) !important;
+        border: 1px solid var(--color-border) !important;
+        border-radius: 16px !important;
+        color: var(--color-text-primary) !important;
+        backdrop-filter: blur(20px) !important;
+        padding: 25px !important;
+        max-width: 420px !important;
+    }
+    
+    .swal2-title {
+        color: var(--color-teal) !important;
+        font-size: 22px !important;
+        margin-bottom: 15px !important;
+        text-align: center !important;
+    }
+    
+    .swal2-html-container {
+        color: var(--color-text-secondary) !important;
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+        margin: 0 0 25px !important;
+        text-align: center !important;
+    }
+    
+    .swal2-actions {
+        gap: 20px !important; /* 🔥 INI KUNCI: JARAK ANTAR TOMBOL */
+        margin-top: 10px !important;
+        justify-content: center !important;
+    }
+    
+    .swal2-confirm {
+        background: linear-gradient(135deg, var(--color-teal), var(--color-cyan)) !important;
+        color: var(--color-navy) !important;
+        border: none !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        padding: 12px 28px !important;
+        font-size: 14px !important;
+        min-width: 120px !important;
+        transition: all 0.3s ease !important;
+        margin: 0 !important;
+    }
+    
+    .swal2-confirm:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3) !important;
+    }
+    
+    .swal2-cancel {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: var(--color-text-primary) !important;
+        border: 1px solid var(--color-border) !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        padding: 12px 28px !important;
+        font-size: 14px !important;
+        min-width: 120px !important;
+        transition: all 0.3s ease !important;
+        margin: 0 !important;
+    }
+    
+    .swal2-cancel:hover {
+        background: rgba(255, 255, 255, 0.12) !important;
+        transform: translateY(-2px) !important;
+    }
+    
     /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
         .dashboard-wrapper {
@@ -385,8 +458,31 @@
         .products-grid {
             grid-template-columns: 1fr;
         }
+        
+        .product-image-wrapper {
+            height: 160px;
+        }
+        
+        .swal2-popup {
+            width: 90% !important;
+            margin: 0 20px !important;
+        }
+        
+        .swal2-actions {
+            flex-direction: column !important;
+            gap: 10px !important;
+        }
+        
+        .swal2-confirm,
+        .swal2-cancel {
+            width: 100% !important;
+        }
     }
 </style>
+
+<!-- Load SweetAlert2 untuk Popup Keren -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Load Icon & Font -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -433,9 +529,6 @@
         <div class="products-grid">
             <?php foreach ($products as $product) : ?>
                 <div class="product-card">
-                    <!-- PRODUCT ID BADGE -->
-                    <div class="product-id">#<?= $product['id'] ?></div>
-                    
                     <!-- PRODUCT IMAGE - ULTRA SIMPLE VERSION -->
                     <div class="product-image-wrapper">
                         <?php 
@@ -509,7 +602,7 @@
                             </p>
                         <?php endif; ?>
                         
-                        <!-- ACTIONS -->
+                        <!-- ACTIONS - DENGAN POPUP MODERN -->
                         <div class="product-actions">
                             <a href="/admin/products/edit/<?= $product['id'] ?>" 
                                class="btn-action btn-edit">
@@ -519,11 +612,21 @@
                                class="btn-action btn-view">
                                 <i class="fas fa-eye"></i> Detail
                             </a>
-                            <button type="button" 
-                                    class="btn-action btn-delete"
-                                    onclick="confirmDelete(<?= $product['id'] ?>, '<?= esc($product['name']) ?>')">
-                                <i class="fas fa-trash"></i> Hapus
-                            </button>
+                            
+                            <!-- DELETE FORM - DENGAN SWEETALERT2 -->
+                            <form action="/admin/products/delete/<?= $product['id'] ?>" 
+                                  method="POST" 
+                                  class="delete-form"
+                                  id="delete-form-<?= $product['id'] ?>">
+                                
+                                <?= csrf_field() ?>
+                                
+                                <button type="button" 
+                                        class="btn-action btn-delete"
+                                        onclick="confirmDelete(<?= $product['id'] ?>, '<?= addslashes($product['name']) ?>')">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -532,37 +635,40 @@
     <?php endif; ?>
 </div>
 
-<!-- SCRIPT UNTUK HAPUS PRODUK - WITH CSRF FIX -->
 <script>
-    function confirmDelete(productId, productName) {
-        if (confirm(`Yakin ingin menghapus produk "${productName}"?`)) {
-            // Get CSRF token dari meta tag
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-            
-            // Kirim request hapus ke server
-            fetch(`/admin/products/delete/${productId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify({})
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Refresh halaman setelah berhasil hapus
-                    window.location.reload();
-                } else {
-                    alert('Gagal menghapus produk');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat menghapus produk');
-            });
+// FUNCTION POPUP DELETE MODERN
+function confirmDelete(productId, productName) {
+    Swal.fire({
+        title: 'Hapus Produk?',
+        html: `Apakah Anda yakin ingin menghapus produk <strong>"${productName}"</strong>?<br><br><small style="color: #8892b0;">Aksi ini tidak dapat dibatalkan.</small>`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal',
+        customClass: {
+            popup: 'swal2-popup',
+            title: 'swal2-title',
+            htmlContainer: 'swal2-html-container',
+            confirmButton: 'swal2-confirm',
+            cancelButton: 'swal2-cancel',
+            actions: 'swal2-actions'
+        },
+        buttonsStyling: false,
+        reverseButtons: true,
+        focusCancel: true,
+        showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
         }
-    }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Submit form jika user klik "Ya, Hapus!"
+            document.getElementById(`delete-form-${productId}`).submit();
+        }
+    });
+}
 </script>
 
 <?= $this->endSection() ?>

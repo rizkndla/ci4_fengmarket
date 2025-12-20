@@ -7,6 +7,9 @@ use App\Models\ProductModel;
 
 class ProductController extends BaseController
 {
+    // ===============================
+    // LIST PRODUCT
+    // ===============================
     public function index()
     {
         $model = new ProductModel();
@@ -16,47 +19,25 @@ class ProductController extends BaseController
         ]);
     }
 
+    // ===============================
+    // CREATE FORM
+    // ===============================
     public function create()
     {
         return view('admin/products/create');
     }
 
+    // ===============================
+    // STORE PRODUCT
+    // ===============================
     public function store()
     {
-        // ===============================
-        // VALIDATION RULES
-        // ===============================
         $rules = [
-            'name' => [
-                'rules'  => 'required|min_length[3]',
-                'errors' => [
-                    'required'   => 'Nama produk wajib diisi',
-                    'min_length' => 'Nama produk minimal 3 karakter'
-                ]
-            ],
-            'price' => [
-                'rules'  => 'required|numeric',
-                'errors' => [
-                    'required' => 'Harga wajib diisi',
-                    'numeric'  => 'Harga harus berupa angka'
-                ]
-            ],
-            'stock' => [
-                'rules'  => 'required|integer',
-                'errors' => [
-                    'required' => 'Stok wajib diisi',
-                    'integer'  => 'Stok harus berupa angka'
-                ]
-            ],
+            'name'        => 'required|min_length[3]',
+            'price'       => 'required|numeric',
+            'stock'       => 'required|integer',
             'description' => 'permit_empty',
-            'image' => [
-                'rules'  => 'uploaded[image]|is_image[image]|max_size[image,5120]',
-                'errors' => [
-                    'uploaded' => 'Gambar produk wajib diupload',
-                    'is_image' => 'File harus berupa gambar',
-                    'max_size' => 'Ukuran gambar maksimal 5MB'
-                ]
-            ]
+            'image'       => 'uploaded[image]|is_image[image]|max_size[image,5120]'
         ];
 
         if (! $this->validate($rules)) {
@@ -65,29 +46,23 @@ class ProductController extends BaseController
                 ->with('validation', $this->validator);
         }
 
-        // ===============================
         // UPLOAD IMAGE
-        // ===============================
         $image = $this->request->getFile('image');
         $imageName = null;
 
         if ($image && $image->isValid() && ! $image->hasMoved()) {
+            $uploadPath = FCPATH . 'uploads/products';
 
-            if (! is_dir(FCPATH . 'uploads/products')) {
-                mkdir(FCPATH . 'uploads/products', 0777, true);
+            if (! is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
             }
 
             $imageName = $image->getRandomName();
-
-            // simpan ke public/uploads/products
-            $image->move(FCPATH . 'uploads/products', $imageName);
+            $image->move($uploadPath, $imageName);
         }
 
-        // ===============================
-        // SAVE TO DATABASE
-        // ===============================
+        // SAVE DATABASE
         $model = new ProductModel();
-
         $model->insert([
             'name'        => $this->request->getPost('name'),
             'price'       => $this->request->getPost('price'),
@@ -99,5 +74,106 @@ class ProductController extends BaseController
 
         return redirect()->to('/admin/products')
             ->with('success', 'Produk berhasil ditambahkan');
+    }
+
+    // ===============================
+    // EDIT FORM
+    // ===============================
+    public function edit($id)
+    {
+        $model = new ProductModel();
+        $product = $model->find($id);
+
+        if (! $product) {
+            return redirect()->to('/admin/products');
+        }
+
+        return view('admin/products/edit', [
+            'product' => $product
+        ]);
+    }
+
+    // ===============================
+    // UPDATE PRODUCT
+    // ===============================
+    public function update($id)
+    {
+        $model = new ProductModel();
+        $product = $model->find($id);
+
+        if (! $product) {
+            return redirect()->to('/admin/products');
+        }
+
+        $image = $this->request->getFile('image');
+        $imageName = $product['image']; // default pakai gambar lama
+
+        if ($image && $image->isValid() && ! $image->hasMoved()) {
+
+            $uploadPath = FCPATH . 'uploads/products';
+
+            if (! is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+
+            $imageName = $image->getRandomName();
+            $image->move($uploadPath, $imageName);
+
+            // hapus gambar lama
+            if (!empty($product['image']) && file_exists($uploadPath . '/' . $product['image'])) {
+                unlink($uploadPath . '/' . $product['image']);
+            }
+        }
+
+        $model->update($id, [
+            'name'        => $this->request->getPost('name'),
+            'price'       => $this->request->getPost('price'),
+            'stock'       => $this->request->getPost('stock'),
+            'description' => $this->request->getPost('description'),
+            'image'       => $imageName
+        ]);
+
+        return redirect()->to('/admin/products')
+            ->with('success', 'Produk berhasil diperbarui');
+    }
+
+    // ===============================
+    // DETAIL PRODUCT
+    // ===============================
+    public function view($id)
+    {
+        $model = new ProductModel();
+        $product = $model->find($id);
+
+        if (! $product) {
+            return redirect()->to('/admin/products');
+        }
+
+        return view('admin/products/view', [
+            'product' => $product
+        ]);
+    }
+
+    // ===============================
+    // DELETE PRODUCT
+    // ===============================
+    public function delete($id)
+    {
+        $model = new ProductModel();
+        $product = $model->find($id);
+
+        if ($product) {
+            if (!empty($product['image'])) {
+                $imagePath = FCPATH . 'uploads/products/' . $product['image'];
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+
+            $model->delete($id);
+        }
+
+        return redirect()->to('/admin/products')
+            ->with('success', 'Produk berhasil dihapus');
     }
 }
