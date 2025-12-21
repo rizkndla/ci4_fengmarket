@@ -8,7 +8,6 @@ use CodeIgniter\Router\RouteCollection;
 
 // ================= PUBLIC =================
 $routes->get('/', 'Home::index');
-$routes->get('/halo', 'Home::halo');
 
 // ================= USER MARKETPLACE =================
 $routes->get('/products', 'ProductController::index');

@@ -6,6 +6,7 @@
     :root {
         --color-navy: #0a192f;
         --color-navy-light: #112240;
+        --color-navy-lighter: #1a2c50;
         --color-teal: #00ffcc;
         --color-teal-light: #64ffda;
         --color-cyan: #08d9ff;
@@ -20,11 +21,15 @@
         --color-danger: #ef4444;
         --color-info: #0ea5e9;
         --color-purple: #8b5cf6;
+        --color-card-dark: rgba(10, 25, 47, 0.9);
+        --color-filter-all: #00ffcc;
+        --color-dropdown-bg: #0f1b2e;
+        --color-dropdown-hover: #15263d;
     }
     
     /* ===== BACKGROUND ===== */
     body {
-        background: var(--color-navy);
+        background: linear-gradient(135deg, #0a192f 0%, #0f1b2e 100%);
         min-height: 100vh;
         position: relative;
         overflow-x: hidden;
@@ -34,23 +39,42 @@
     body::before {
         content: '';
         position: fixed;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(circle at 30% 20%, 
+            rgba(0, 255, 204, 0.08) 0%, 
+            rgba(8, 217, 255, 0.05) 30%, 
+            transparent 70%);
+        filter: blur(100px);
+        animation: floatBlob 30s infinite alternate ease-in-out;
+        z-index: 0;
+        top: -400px;
+        right: -300px;
+        pointer-events: none;
+    }
+    
+    body::after {
+        content: '';
+        position: fixed;
         width: 600px;
         height: 600px;
-        background: radial-gradient(circle, 
-            rgba(10, 25, 47, 0) 0%, 
-            rgba(0, 255, 204, 0.08) 50%, 
-            rgba(8, 217, 255, 0.05) 100%);
+        background: radial-gradient(circle at 70% 80%, 
+            rgba(139, 92, 246, 0.06) 0%, 
+            rgba(99, 102, 241, 0.04) 30%, 
+            transparent 70%);
         filter: blur(80px);
-        animation: floatBlob 25s infinite alternate ease-in-out;
+        animation: floatBlob 25s infinite alternate-reverse ease-in-out;
         z-index: 0;
-        top: -300px;
-        left: -300px;
+        bottom: -300px;
+        left: -200px;
         pointer-events: none;
     }
     
     @keyframes floatBlob {
-        0%, 100% { transform: translate(0, 0) scale(1); }
-        50% { transform: translate(30px, -40px) scale(1.05); }
+        0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+        33% { transform: translate(30px, -40px) scale(1.05) rotate(5deg); }
+        66% { transform: translate(-20px, 30px) scale(0.95) rotate(-5deg); }
+        100% { transform: translate(0, 0) scale(1) rotate(0deg); }
     }
     
     @keyframes fadeIn {
@@ -75,13 +99,22 @@
         align-items: center;
         margin-bottom: 35px;
         padding: 22px 30px;
-        background: rgba(17, 34, 64, 0.85);
+        background: linear-gradient(135deg, 
+            rgba(17, 34, 64, 0.95), 
+            rgba(10, 25, 47, 0.98));
         backdrop-filter: blur(25px);
         border-radius: 18px;
         border: 1px solid var(--color-border);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.05);
         position: relative;
         overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .dashboard-header:hover {
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
     
     .dashboard-header::before {
@@ -90,7 +123,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 4px;
+        height: 3px;
         background: linear-gradient(90deg, 
             transparent 0%, 
             var(--color-teal) 25%, 
@@ -98,6 +131,19 @@
             var(--color-teal) 75%,
             transparent 100%);
         animation: slideLine 3s infinite linear;
+    }
+    
+    .dashboard-header::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, 
+            transparent 0%, 
+            rgba(0, 255, 204, 0.03) 100%);
+        pointer-events: none;
     }
     
     @keyframes slideLine {
@@ -113,6 +159,7 @@
         display: flex;
         align-items: center;
         gap: 14px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
     
     .header-title p {
@@ -123,13 +170,36 @@
     }
     
     .header-stats {
-        background: rgba(0, 255, 204, 0.1);
+        background: linear-gradient(135deg, 
+            rgba(0, 255, 204, 0.12), 
+            rgba(8, 217, 255, 0.08));
         border: 1px solid var(--color-border);
         border-radius: 14px;
         padding: 20px 25px;
         text-align: center;
         min-width: 160px;
         backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .header-stats:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 255, 204, 0.15);
+    }
+    
+    .header-stats::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, 
+            transparent 30%, 
+            rgba(255, 255, 255, 0.03) 100%);
+        pointer-events: none;
     }
     
     .stats-number {
@@ -137,6 +207,7 @@
         font-size: 28px;
         font-weight: 700;
         margin-bottom: 5px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
     
     .stats-label {
@@ -149,22 +220,42 @@
     
     /* ===== TABLE CONTAINER ===== */
     .table-container {
-        background: var(--color-card-bg);
+        background: linear-gradient(135deg, 
+            rgba(17, 34, 64, 0.9), 
+            rgba(10, 25, 47, 0.95));
         backdrop-filter: blur(20px);
         border-radius: 18px;
         border: 1px solid var(--color-border);
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.05);
         margin-bottom: 40px;
         animation: fadeIn 0.7s ease;
+        position: relative;
+    }
+    
+    .table-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, 
+            transparent 0%, 
+            rgba(0, 255, 204, 0.02) 100%);
+        pointer-events: none;
+        z-index: 1;
     }
     
     .table-header {
         padding: 22px 30px;
         background: linear-gradient(135deg, 
-            rgba(10, 25, 47, 0.7), 
-            rgba(17, 34, 64, 0.8));
+            rgba(10, 25, 47, 0.8), 
+            rgba(17, 34, 64, 0.9));
         border-bottom: 1px solid var(--color-border);
+        position: relative;
+        z-index: 2;
     }
     
     .table-header h2 {
@@ -175,6 +266,7 @@
         display: flex;
         align-items: center;
         gap: 12px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
     
     .table-header h2 i {
@@ -185,11 +277,16 @@
     /* ===== ORDERS TABLE ===== */
     .orders-table {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0;
+        position: relative;
+        z-index: 2;
     }
     
     .orders-table thead {
-        background: rgba(10, 25, 47, 0.5);
+        background: linear-gradient(135deg, 
+            rgba(10, 25, 47, 0.7), 
+            rgba(17, 34, 64, 0.8));
         border-bottom: 1px solid var(--color-border);
     }
     
@@ -202,15 +299,54 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         border-bottom: 1px solid var(--color-border);
+        position: relative;
+        white-space: nowrap;
+    }
+    
+    .orders-table th::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--color-teal);
+        transition: width 0.3s ease;
+    }
+    
+    .orders-table th:hover::after {
+        width: 100%;
     }
     
     .orders-table tbody tr {
         transition: all 0.3s ease;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        position: relative;
+    }
+    
+    .orders-table tbody tr::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            rgba(0, 255, 204, 0.03) 50%, 
+            transparent 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .orders-table tbody tr:hover::before {
+        opacity: 1;
     }
     
     .orders-table tbody tr:hover {
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(255, 255, 255, 0.02);
+        transform: translateX(5px);
     }
     
     .orders-table tbody tr:last-child {
@@ -222,6 +358,8 @@
         color: var(--color-text-primary);
         font-size: 14px;
         vertical-align: middle;
+        position: relative;
+        z-index: 1;
     }
     
     /* ===== BADGE STATUS ===== */
@@ -235,30 +373,64 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, 
+            transparent 30%, 
+            rgba(255, 255, 255, 0.1) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .badge:hover::before {
+        opacity: 1;
     }
     
     .badge.pending {
-        background: rgba(245, 158, 11, 0.15);
+        background: linear-gradient(135deg, 
+            rgba(245, 158, 11, 0.15), 
+            rgba(245, 158, 11, 0.1));
         color: var(--color-warning);
         border: 1px solid rgba(245, 158, 11, 0.3);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
     }
     
     .badge.processing {
-        background: rgba(14, 165, 233, 0.15);
+        background: linear-gradient(135deg, 
+            rgba(14, 165, 233, 0.15), 
+            rgba(14, 165, 233, 0.1));
         color: var(--color-info);
         border: 1px solid rgba(14, 165, 233, 0.3);
+        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
     }
     
     .badge.completed {
-        background: rgba(16, 185, 129, 0.15);
+        background: linear-gradient(135deg, 
+            rgba(16, 185, 129, 0.15), 
+            rgba(16, 185, 129, 0.1));
         color: var(--color-success);
         border: 1px solid rgba(16, 185, 129, 0.3);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
     }
     
     .badge.cancelled {
-        background: rgba(239, 68, 68, 0.15);
+        background: linear-gradient(135deg, 
+            rgba(239, 68, 68, 0.15), 
+            rgba(239, 68, 68, 0.1));
         color: var(--color-danger);
         border: 1px solid rgba(239, 68, 68, 0.3);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
     }
     
     .badge i {
@@ -283,46 +455,63 @@
         transition: all 0.3s ease;
         border: 1px solid var(--color-border);
         background: rgba(255, 255, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-action::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, 
+            transparent 30%, 
+            rgba(255, 255, 255, 0.1) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .btn-action:hover::before {
+        opacity: 1;
     }
     
     .btn-action:hover {
-        transform: translateY(-2px);
+        transform: translateY(-3px) scale(1.05);
         border-color: var(--color-teal);
+        box-shadow: 0 8px 20px rgba(0, 255, 204, 0.2);
     }
     
     .btn-view {
-        background: rgba(0, 255, 204, 0.1);
+        background: linear-gradient(135deg, 
+            rgba(0, 255, 204, 0.12), 
+            rgba(0, 255, 204, 0.08));
         color: var(--color-teal);
-        border-color: rgba(0, 255, 204, 0.2);
-    }
-    
-    .btn-view:hover {
-        background: rgba(0, 255, 204, 0.15);
+        border-color: rgba(0, 255, 204, 0.3);
     }
     
     .btn-edit {
-        background: rgba(99, 102, 241, 0.1);
+        background: linear-gradient(135deg, 
+            rgba(99, 102, 241, 0.12), 
+            rgba(99, 102, 241, 0.08));
         color: #6366f1;
-        border-color: rgba(99, 102, 241, 0.2);
-    }
-    
-    .btn-edit:hover {
-        background: rgba(99, 102, 241, 0.15);
+        border-color: rgba(99, 102, 241, 0.3);
     }
     
     .btn-print {
-        background: rgba(139, 92, 246, 0.1);
+        background: linear-gradient(135deg, 
+            rgba(139, 92, 246, 0.12), 
+            rgba(139, 92, 246, 0.08));
         color: var(--color-purple);
-        border-color: rgba(139, 92, 246, 0.2);
+        border-color: rgba(139, 92, 246, 0.3);
     }
     
-    .btn-print:hover {
-        background: rgba(139, 92, 246, 0.15);
-    }
-    
-    /* ===== FILTER SECTION - DIPERBAIKI ===== */
+    /* ===== FILTER SECTION ===== */
     .filter-section {
-        background: rgba(17, 34, 64, 0.5);
+        background: linear-gradient(135deg, 
+            rgba(17, 34, 64, 0.7), 
+            rgba(10, 25, 47, 0.8));
         padding: 20px 30px;
         border-bottom: 1px solid var(--color-border);
         display: flex;
@@ -330,6 +519,8 @@
         align-items: center;
         gap: 20px;
         flex-wrap: wrap;
+        position: relative;
+        z-index: 2;
     }
     
     .filter-group {
@@ -345,8 +536,11 @@
         font-weight: 600;
     }
     
+    /* ===== DROPDOWN STYLES - DIPERBAIKI ===== */
     .filter-select {
-        background: rgba(255, 255, 255, 0.08);
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.1), 
+            rgba(255, 255, 255, 0.05));
         border: 1px solid var(--color-border);
         border-radius: 10px;
         padding: 10px 16px;
@@ -363,55 +557,146 @@
         background-size: 14px;
         padding-right: 35px;
         cursor: pointer;
+        backdrop-filter: blur(10px);
     }
     
     .filter-select:hover {
-        background-color: rgba(255, 255, 255, 0.12);
-        border-color: rgba(0, 255, 204, 0.3);
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.15), 
+            rgba(255, 255, 255, 0.1));
+        border-color: rgba(0, 255, 204, 0.4);
+        box-shadow: 0 5px 15px rgba(0, 255, 204, 0.1);
     }
     
     .filter-select:focus {
         outline: none;
         border-color: var(--color-teal);
-        box-shadow: 0 0 0 3px rgba(0, 255, 204, 0.1);
+        box-shadow: 0 0 0 3px rgba(0, 255, 204, 0.2);
     }
     
-    /* Style untuk semua opsi di dalam select */
+    /* DROPDOWN OPTIONS BACKGROUND - DIPERBAIKI */
     .filter-select option {
-        background-color: var(--color-navy-light);
+        background-color: var(--color-dropdown-bg);
         color: var(--color-text-primary);
-        padding: 10px;
+        padding: 12px 15px;
         font-size: 14px;
+        border: none;
+        margin: 2px 0;
     }
     
-    /* Style khusus untuk optgroup */
-    .filter-select optgroup {
-        background-color: var(--color-navy);
-        color: var(--color-teal);
+    /* Hover state untuk options */
+    .filter-select option:hover,
+    .filter-select option:checked,
+    .filter-select option:focus {
+        background-color: var(--color-dropdown-hover) !important;
+        color: var(--color-text-primary) !important;
+    }
+    
+    /* WARNA KHUSUS untuk "Semua Status" dan "Semua Periode" */
+    .filter-select option[value=""] {
+        background-color: var(--color-dropdown-bg) !important;
+        color: var(--color-filter-all) !important;
         font-weight: 600;
     }
     
-    /* Style untuk disabled option */
+    .filter-select option[value=""]:hover,
+    .filter-select option[value=""]:checked {
+        background-color: var(--color-dropdown-hover) !important;
+        color: var(--color-filter-all) !important;
+    }
+    
+    /* WARNA untuk opsi Status */
+    .filter-select option[value="pending"] {
+        color: #f59e0b !important;
+        background-color: var(--color-dropdown-bg) !important;
+    }
+    
+    .filter-select option[value="processing"] {
+        color: #0ea5e9 !important;
+        background-color: var(--color-dropdown-bg) !important;
+    }
+    
+    .filter-select option[value="completed"] {
+        color: #10b981 !important;
+        background-color: var(--color-dropdown-bg) !important;
+    }
+    
+    .filter-select option[value="cancelled"] {
+        color: #ef4444 !important;
+        background-color: var(--color-dropdown-bg) !important;
+    }
+    
+    /* WARNA untuk opsi Periode */
+    .filter-select option[value="today"] {
+        color: #0ea5e9 !important;
+        background-color: var(--color-dropdown-bg) !important;
+    }
+    
+    .filter-select option[value="week"] {
+        color: #10b981 !important;
+        background-color: var(--color-dropdown-bg) !important;
+    }
+    
+    .filter-select option[value="month"] {
+        color: #8b5cf6 !important;
+        background-color: var(--color-dropdown-bg) !important;
+    }
+    
+    .filter-select option[value="year"] {
+        color: #f59e0b !important;
+        background-color: var(--color-dropdown-bg) !important;
+    }
+    
+    /* Scrollbar untuk dropdown di browser tertentu */
+    .filter-select::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .filter-select::-webkit-scrollbar-track {
+        background: var(--color-dropdown-bg);
+        border-radius: 4px;
+    }
+    
+    .filter-select::-webkit-scrollbar-thumb {
+        background: var(--color-navy-light);
+        border-radius: 4px;
+        border: 1px solid var(--color-border);
+    }
+    
+    /* Untuk Firefox */
+    .filter-select option {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-navy-light) var(--color-dropdown-bg);
+    }
+    
+    /* Style khusus untuk disabled option */
     .filter-select option:disabled {
         color: var(--color-text-muted);
-        background-color: var(--color-navy);
+        background-color: var(--color-dropdown-bg);
     }
     
     .search-box {
         display: flex;
         align-items: center;
         gap: 10px;
-        background: rgba(255, 255, 255, 0.08);
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.1), 
+            rgba(255, 255, 255, 0.05));
         border: 1px solid var(--color-border);
         border-radius: 10px;
         padding: 10px 16px;
         min-width: 250px;
         transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
     }
     
     .search-box:focus-within {
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.15), 
+            rgba(255, 255, 255, 0.1));
         border-color: var(--color-teal);
-        box-shadow: 0 0 0 3px rgba(0, 255, 204, 0.1);
+        box-shadow: 0 0 0 3px rgba(0, 255, 204, 0.2),
+                    0 5px 20px rgba(0, 255, 204, 0.1);
     }
     
     .search-box i {
@@ -437,6 +722,8 @@
         text-align: center;
         padding: 80px 30px;
         color: var(--color-text-secondary);
+        position: relative;
+        z-index: 2;
     }
     
     .empty-icon {
@@ -444,6 +731,7 @@
         color: var(--color-teal);
         margin-bottom: 25px;
         opacity: 0.5;
+        filter: drop-shadow(0 4px 8px rgba(0, 255, 204, 0.2));
     }
     
     .empty-title {
@@ -465,20 +753,55 @@
         align-items: center;
         gap: 10px;
         padding: 12px 24px;
-        background: linear-gradient(135deg, var(--color-purple), #6366f1);
+        background: linear-gradient(135deg, 
+            var(--color-purple), 
+            #6366f1);
         color: white;
         text-decoration: none;
         border-radius: 12px;
         font-weight: 600;
         font-size: 14px;
         transition: all 0.3s ease;
-        box-shadow: 0 5px 20px rgba(139, 92, 246, 0.3);
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-export::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, 
+            transparent 30%, 
+            rgba(255, 255, 255, 0.2) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .btn-export:hover::before {
+        opacity: 1;
     }
     
     .btn-export:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4);
         color: white;
+    }
+    
+    /* ===== TABLE FOOTER ===== */
+    .table-footer {
+        padding: 20px 30px;
+        border-top: 1px solid var(--color-border);
+        text-align: center;
+        background: linear-gradient(135deg, 
+            rgba(10, 25, 47, 0.8), 
+            rgba(17, 34, 64, 0.9));
+        position: relative;
+        z-index: 2;
     }
     
     /* ===== RESPONSIVE ===== */
@@ -555,6 +878,10 @@
             width: 32px;
             height: 32px;
         }
+        
+        .filter-select {
+            min-width: 130px;
+        }
     }
 </style>
 
@@ -585,19 +912,24 @@
             <h2><i class="fas fa-receipt"></i> Semua Pesanan</h2>
         </div>
         
-        <!-- FILTER SECTION - DIPERBAIKI -->
+        <!-- FILTER SECTION -->
         <div class="filter-section">
             <div class="filter-group">
                 <span class="filter-label">Filter:</span>
-                <select class="filter-select">
+                
+                <!-- FILTER STATUS -->
+                <select class="filter-select" id="statusFilter">
+                    <!-- "SEMUA STATUS" dengan warna TEAL -->
                     <option value="">Semua Status</option>
-                    <option value="pending" style="background-color: rgba(245, 158, 11, 0.1);">Pending</option>
-                    <option value="processing" style="background-color: rgba(14, 165, 233, 0.1);">Processing</option>
-                    <option value="completed" style="background-color: rgba(16, 185, 129, 0.1);">Completed</option>
-                    <option value="cancelled" style="background-color: rgba(239, 68, 68, 0.1);">Cancelled</option>
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
                 </select>
                 
-                <select class="filter-select">
+                <!-- FILTER PERIODE -->
+                <select class="filter-select" id="periodFilter">
+                    <!-- "SEMUA PERIODE" dengan warna TEAL -->
                     <option value="">Semua Periode</option>
                     <option value="today">Hari Ini</option>
                     <option value="week">Minggu Ini</option>
@@ -608,7 +940,7 @@
             
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" class="search-input" placeholder="Cari ID Order atau nama pelanggan...">
+                <input type="text" class="search-input" id="searchInput" placeholder="Cari ID Order atau nama pelanggan...">
             </div>
         </div>
         
@@ -625,7 +957,7 @@
                 </p>
             </div>
         <?php else : ?>
-            <table class="orders-table">
+            <table class="orders-table" id="ordersTable">
                 <thead>
                     <tr>
                         <th>ID Order</th>
@@ -637,11 +969,13 @@
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tableBody">
                     <?php foreach ($orders as $order): ?>
                         <tr>
                             <td>
-                                <strong style="color: var(--color-teal);">#<?= $order['id'] ?></strong>
+                                <strong style="color: var(--color-teal); text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">
+                                    #<?= $order['id'] ?>
+                                </strong>
                             </td>
                             <td>
                                 <div style="font-weight: 600; color: var(--color-text-primary);">
@@ -664,7 +998,7 @@
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <strong style="color: var(--color-teal); font-size: 15px;">
+                                <strong style="color: var(--color-teal); font-size: 15px; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">
                                     Rp <?= number_format($order['total'], 0, ',', '.') ?>
                                 </strong>
                             </td>
@@ -716,7 +1050,7 @@
         <?php endif; ?>
         
         <!-- TABLE FOOTER -->
-        <div style="padding: 20px 30px; border-top: 1px solid var(--color-border); text-align: center;">
+        <div class="table-footer">
             <a href="/admin/orders/export" class="btn-export">
                 <i class="fas fa-file-export"></i>
                 Export Data Excel
@@ -731,100 +1065,71 @@
 // Filter functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Filter by status
-    const statusFilter = document.querySelectorAll('.filter-select')[0];
-    const tableRows = document.querySelectorAll('.orders-table tbody tr');
+    const statusFilter = document.getElementById('statusFilter');
+    const periodFilter = document.getElementById('periodFilter');
+    const searchInput = document.getElementById('searchInput');
+    const tableRows = document.querySelectorAll('#ordersTable tbody tr');
     
-    if (statusFilter && tableRows.length > 0) {
-        statusFilter.addEventListener('change', function() {
-            const selectedStatus = this.value.toLowerCase();
+    // Function to filter table
+    function filterTable() {
+        const selectedStatus = statusFilter ? statusFilter.value.toLowerCase() : '';
+        const selectedPeriod = periodFilter ? periodFilter.value.toLowerCase() : '';
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+        
+        if (!tableRows || tableRows.length === 0) return;
+        
+        tableRows.forEach(row => {
+            let showRow = true;
             
-            tableRows.forEach(row => {
+            // Filter by status
+            if (selectedStatus) {
                 const statusBadge = row.querySelector('.badge');
                 if (statusBadge) {
                     const rowStatus = statusBadge.classList[1];
-                    if (selectedStatus === '' || rowStatus === selectedStatus) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
+                    if (rowStatus !== selectedStatus) {
+                        showRow = false;
                     }
                 }
-            });
-        });
-    }
-    
-    // Search functionality
-    const searchInput = document.querySelector('.search-input');
-    
-    if (searchInput && tableRows.length > 0) {
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            
-            tableRows.forEach(row => {
-                const orderId = row.cells[0].textContent.toLowerCase();
-                const customer = row.cells[1].textContent.toLowerCase();
-                const product = row.cells[2].textContent.toLowerCase();
-                
-                if (orderId.includes(searchTerm) || 
-                    customer.includes(searchTerm) || 
-                    product.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-    }
-    
-    // Add hover effect to rows
-    tableRows.forEach(row => {
-        row.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateX(5px)';
-            this.style.transition = 'transform 0.3s ease';
-        });
-        
-        row.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateX(0)';
-        });
-    });
-    
-    // Animate table rows on load
-    setTimeout(() => {
-        tableRows.forEach((row, index) => {
-            row.style.opacity = '0';
-            row.style.transform = 'translateY(20px)';
-            
-            setTimeout(() => {
-                row.style.transition = 'all 0.4s ease';
-                row.style.opacity = '1';
-                row.style.transform = 'translateY(0)';
-            }, index * 50);
-        });
-    }, 300);
-    
-    // Custom styling untuk select dropdown di beberapa browser
-    const filterSelects = document.querySelectorAll('.filter-select');
-    filterSelects.forEach(select => {
-        // Update warna saat opsi dipilih
-        select.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            const statusColor = selectedOption.style.backgroundColor || '';
-            
-            // Reset semua warna
-            this.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-            
-            // Jika opsi dengan warna khusus dipilih, update background
-            if (selectedOption.style.backgroundColor && selectedOption.value !== '') {
-                this.style.backgroundColor = selectedOption.style.backgroundColor;
-                this.style.color = 'var(--color-text-primary)';
             }
+            
+            // Filter by period (contoh sederhana)
+            if (showRow && selectedPeriod) {
+                const dateCell = row.querySelector('td:nth-child(6)');
+                if (dateCell) {
+                    const dateText = dateCell.textContent.toLowerCase();
+                    // Logika filter periode bisa ditambahkan di sini
+                    // Contoh sederhana:
+                    if (selectedPeriod === 'today' && !dateText.includes('hari ini')) {
+                        showRow = false;
+                    }
+                }
+            }
+            
+            // Filter by search term
+            if (showRow && searchTerm) {
+                const rowText = row.textContent.toLowerCase();
+                if (!rowText.includes(searchTerm)) {
+                    showRow = false;
+                }
+            }
+            
+            // Show/hide row
+            row.style.display = showRow ? '' : 'none';
         });
-        
-        // Set initial color jika ada opsi yang sudah terpilih
-        const selectedOption = select.options[select.selectedIndex];
-        if (selectedOption.style.backgroundColor && selectedOption.value !== '') {
-            select.style.backgroundColor = selectedOption.style.backgroundColor;
-        }
-    });
+    }
+    
+    // Add event listeners
+    if (statusFilter) {
+        statusFilter.addEventListener('change', filterTable);
+    }
+    
+    if (periodFilter) {
+        periodFilter.addEventListener('change', filterTable);
+    }
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', filterTable);
+    }
 });
 </script>
 
