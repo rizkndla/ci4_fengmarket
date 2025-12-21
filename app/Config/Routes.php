@@ -10,21 +10,22 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->get('/halo', 'Home::halo');
 
-// products (user side)
+// ================= USER MARKETPLACE =================
 $routes->get('/products', 'ProductController::index');
+$routes->get('/products/(:num)', 'ProductController::detail/$1');
 
 // ================= ADMIN AUTH =================
-$routes->get('admin/login', 'Admin\AuthController::login');
-$routes->post('admin/login', 'Admin\AuthController::authenticate');
-$routes->get('admin/logout', 'Admin\AuthController::logout');
+$routes->get('/admin/login', 'Admin\AuthController::login');
+$routes->post('/admin/login', 'Admin\AuthController::authenticate');
+$routes->get('/admin/logout', 'Admin\AuthController::logout');
 
 // ================= ADMIN AREA =================
 $routes->group('admin', ['filter' => 'adminauth'], function ($routes) {
 
-    // dashboard
+    // ===== DASHBOARD =====
     $routes->get('dashboard', 'Admin\DashboardController::index');
 
-    // ================= PRODUCTS =================
+    // ===== PRODUCTS =====
     $routes->get('products', 'Admin\ProductController::index');
     $routes->get('products/create', 'Admin\ProductController::create');
     $routes->post('products/store', 'Admin\ProductController::store');
@@ -33,12 +34,12 @@ $routes->group('admin', ['filter' => 'adminauth'], function ($routes) {
     $routes->get('products/view/(:num)', 'Admin\ProductController::view/$1');
     $routes->post('products/delete/(:num)', 'Admin\ProductController::delete/$1');
 
-    // ================= ORDERS =================
+    // ===== ORDERS (DUMMY) =====
     $routes->get('orders', 'Admin\OrderController::index');
-    $routes->get('orders/edit/(:num)', 'Admin\OrderController::edit/$1'); // TAMBAHKAN INI
-    $routes->post('orders/update/(:num)', 'Admin\OrderController::update/$1'); // TAMBAHKAN INI
-    $routes->get('orders/view/(:num)', 'Admin\OrderController::view/$1'); // TAMBAHKAN INI
-    $routes->get('orders/print/(:num)', 'Admin\OrderController::print/$1'); // TAMBAHKAN INI
-    $routes->get('orders/export', 'Admin\OrderController::export'); // TAMBAHKAN INI
+    $routes->get('orders/view/(:num)', 'Admin\OrderController::view/$1');
+    $routes->get('orders/edit/(:num)', 'Admin\OrderController::edit/$1');
+    $routes->post('orders/update/(:num)', 'Admin\OrderController::update/$1');
+    $routes->get('orders/print/(:num)', 'Admin\OrderController::print/$1');
+    $routes->get('orders/export', 'Admin\OrderController::export');
 
 });
